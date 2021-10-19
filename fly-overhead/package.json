@@ -1,0 +1,27 @@
+{
+  "name": "fly-overhead",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "leaflet": "^1.7.1",
+    "leaflet-defaulticon-compatibility": "^0.1.1",
+    "leaflet-geosearch": "^3.6.0",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-leaflet": "^3.2.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "eslint": "^8.0.1",
+    "eslint-config-next": "11.1.2",
+    "eslint-plugin-react": "^7.26.1"
+  }
+}
