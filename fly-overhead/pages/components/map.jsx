@@ -1,6 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import PlaneMarker from "./planesMarker";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
+import axios from 'axios'
+import "leaflet/dist/leaflet.css"
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
+import "leaflet-defaulticon-compatibility"
 
 
 const Map = (props) => {
@@ -24,9 +28,11 @@ const Map = (props) => {
       moveend: async () => {
         const bounds = map.getBounds();
         const wrapBounds = map.wrapLatLngBounds(bounds);
+        console.log(bounds);
         // console.log(wrapBounds._southWest.lat, wrapBounds._southWest.lng, wrapBounds._northEast.lat, wrapBounds._northEast.lng);
 
-        const res = await axios.get(`http://localhost:3001/api/area/${wrapBounds._southWest.lat}/${wrapBounds._southWest.lng}/${wrapBounds._northEast.lat}/${wrapBounds._northEast.lng}`);
+        const res = await axios.get(`https://${process.env.OPENSKY_USER}:${process.env.OPENSKY_PASS}@opensky-network.org/api/states/all?lamin=${wrapBounds._southWest.lat}&lomin=${wrapBounds._southWest.lng}&lamax=${wrapBounds._northEast.lat}&lomax=${wrapBounds._northEast.lng}`);
+        // `http://localhost:3000/api/area/${wrapBounds._southWest.lat}/${wrapBounds._southWest.lng}/${wrapBounds._northEast.lat}/${wrapBounds._northEast.lng}`
         // const res = await axios.get(`http://localhost:3001/api/area/all`);
         console.log(res.data);
         setPlanes(res.data.states)
@@ -52,7 +58,7 @@ const Map = (props) => {
     center={position} 
     zoom={13} 
     scrollWheelZoom={true}
-    style={{height: 500}}>
+    style={{height: 500, width: 500}}>
   <MyComponent />
   <TileLayer
     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
