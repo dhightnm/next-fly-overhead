@@ -65,7 +65,7 @@ const Map = (props) => {
         setTimeout(console.log('POSITION', position), 3000);
         // return coords;
       };
-      window.navigator.geolocation.getCurrentPosition(successCallback)
+      typeof window !== undefined ? window.navigator.geolocation.getCurrentPosition(successCallback) : null;
         }, []);
 
         console.log('OUTSIDE EFFECT', position)
