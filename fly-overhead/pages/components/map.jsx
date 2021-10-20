@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PlaneMarker from "./planesMarker";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 import axios from 'axios'
@@ -12,6 +12,7 @@ const Map = (props) => {
   const [planes, setPlanes] = useState([]);
   //start process for geo location load on map render
   const [userPosition, setUserPosition] = useState(null)
+  const [position, setPosition] = useState([]);
 
   function MyComponent() {
     const map = useMapEvents({
@@ -52,7 +53,24 @@ const Map = (props) => {
     })
   };
 
-    const position = [36.1087, -115.1796]
+    // window.navigator.geolocation.getCurrentPosition(successCallback);
+
+    
+
+    useEffect(() => {
+      const successCallback = (position) => {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        let coords = [latitude, longitude]
+        console.log(coords)
+        return coords;
+      };
+      setPosition(window.navigator.geolocation.getCurrentPosition(successCallback));
+    }, [Map]);
+
+    console.log('FULL POSITION', position)
+
+
   return <>
   <MapContainer
     center={position} 
