@@ -13,6 +13,7 @@ const Map = (props) => {
   //start process for geo location load on map render
   const [userPosition, setUserPosition] = useState(null)
   const [position, setPosition] = useState(null);
+  const [newCenter, setNewCenter] = useState(null);
 
   function MyComponent() {
     const map = useMapEvents({
@@ -27,9 +28,12 @@ const Map = (props) => {
         console.log('location found:', location)
       },
       moveend: async () => {
+        const center = map.getCenter();
         const bounds = map.getBounds();
         const wrapBounds = map.wrapLatLngBounds(bounds);
+        console.log('GET CENTER', center);
         console.log(bounds);
+        setNewCenter([center.lat, center.lng]);
         // console.log(wrapBounds._southWest.lat, wrapBounds._southWest.lng, wrapBounds._northEast.lat, wrapBounds._northEast.lng);
 
         const res = await axios.get(`https://opensky-network.org/api/states/all?lamin=${wrapBounds._southWest.lat}&lomin=${wrapBounds._southWest.lng}&lamax=${wrapBounds._northEast.lat}&lomax=${wrapBounds._northEast.lng}`);
@@ -65,17 +69,16 @@ const Map = (props) => {
         setTimeout(console.log('POSITION', position), 3000);
         // return coords;
       };
-      typeof window !== undefined ? window.navigator.geolocation.getCurrentPosition(successCallback) : null;
-        }, []);
-
-        console.log('OUTSIDE EFFECT', position)
+      window.navigator.geolocation.getCurrentPosition(successCallback);
+    }, []);
+    
+    console.log('OUTSIDE EFFECT', position)
 
    
 
   // let position = [36.1087, -115.1796];
-
+  // if (typeof window !== 'undefined') {
    if (position) {return <>
-  <button></button>
   <MapContainer
     center={position} 
     zoom={13} 
@@ -89,6 +92,18 @@ const Map = (props) => {
   {renderPlanes()}
   </MapContainer>
   </>
-} else {return <div>STILL LOADING</div>}};
+} else {return <div>
+  <MapContainer
+  center={!planes ? newCenter : null} 
+  zoom={13} 
+  scrollWheelZoom={true}
+  style={{height: 500, width: 500}}>
+<MyComponent />
+<TileLayer
+  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+/>
+</MapContainer></div>}};
+// }
 
 export default Map;
